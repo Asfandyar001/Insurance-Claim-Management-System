@@ -163,8 +163,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
         console.log(formData)
         if (!validateCurrentStep()) {
             toast({
-                title: "Required fields missing",
-                description: "Please fill in all required fields before proceeding.",
+                title: "Fill out all required fields.",
                 variant: "destructive",
             });
             return;
@@ -184,10 +183,10 @@ export default function AddClaim({ open, onClose, onSubmit }) {
     const handleSubmit = () => {
         if (!validateCurrentStep()) {
             toast({
-                title: "Required fields missing",
-                description: "Please fill in all required fields.",
+                title: "Fill out all required fields.",
                 variant: "destructive",
             });
+
             return;
         }
 
@@ -199,7 +198,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
 
         toast({
             title: "Claim Added Successfully",
-            description: `Claim ${formData.claimNo} has been created.`,
+            variant: "success",
         });
 
         onClose();
