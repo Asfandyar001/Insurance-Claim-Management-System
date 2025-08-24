@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "../hooks/use-toast";
+import axios from "axios";
 
 export default function AddClaim({ open, onClose, onSubmit }) {
     const [currentStep, setCurrentStep] = useState(1);
@@ -151,7 +152,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
     const validateCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return formData.lcmRef && formData.claimNo && formData.lossType;
+                return formData.lcmRef && formData.claimNo && formData.lossType && formData.assessmentType;
             case 3:
                 return formData.insuredName;
             default:
@@ -180,28 +181,40 @@ export default function AddClaim({ open, onClose, onSubmit }) {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!validateCurrentStep()) {
             toast({
                 title: "Fill out all required fields.",
                 variant: "destructive",
             });
-
             return;
         }
+        try {
+            const payload = {
+                ...formData,
+                daysOpen: 0
+            };
 
-        onSubmit({
-            ...formData,
-            id: Date.now().toString(),
-            daysOpen: 0
-        });
+            const response = await axios.post("http://localhost:5000/api/claims", payload);
 
-        toast({
-            title: "Claim Added Successfully",
-            variant: "success",
-        });
+            toast({
+                title: "Claim Added Successfully",
+                variant: "success",
+            });
 
-        onClose();
+            onSubmit({
+                ...formData,
+                id: Date.now().toString(),
+                daysOpen: 0
+            });
+
+            onClose();
+        } catch (error) {
+            toast({
+                title: "Failed to add claim",
+                variant: "destructive",
+            });
+        }
     };
 
     const renderStep = () => {
@@ -241,7 +254,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                             </select>
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Assessment Type</p>
+                            <p className="text-sm font-medium">Assessment Type *</p>
                             <select
                                 value={formData.assessmentType}
                                 onChange={(e) => updateFormData("assessmentType", e.target.value)}

@@ -8,7 +8,7 @@ const contactSchema = new mongoose.Schema({
 }, { _id: false });
 
 const insuranceClaimSchema = new mongoose.Schema({
-    lcmRef: { type: String, required: true, unique: true },
+    lcmRef: { type: String, required: true },
     claimNo: { type: String, required: true },
     lossType: {
         type: String,
