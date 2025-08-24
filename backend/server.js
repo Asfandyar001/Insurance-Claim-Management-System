@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 // Uncomment when route is ready
 import authRoutes from "./routes/authRoutes.js";
+import claimRoutes from "./routes/claimRoutes.js"
 
 import { connectDB } from "./lib/database.js";
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 // Routes
  app.use("/api/auth", authRoutes);
+ app.use("/api/claims", claimRoutes);
 
 // Optional health check
 app.get("/", (req, res) => {
