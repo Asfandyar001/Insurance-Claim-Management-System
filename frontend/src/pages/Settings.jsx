@@ -1,8 +1,12 @@
-export default function AddClaim({ open, onClose, onSubmit }) {
+import { useTheme } from '../hooks/ThemeContext';
+
+export default function Settings({ open, onClose, onSubmit }) {
+    const { darkMode, toggleTheme } = useTheme();
+
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
-            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 transition-all duration-200 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
-                <button onClick={onClose} className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer">✕</button>
+            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 transition-all duration-200 dark:bg-slate-950 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
+                <button onClick={onClose} className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer dark:text-gray-400 dark:hover:text-white">✕</button>
 
                 {/* Header */}
                 <div className="flex items-center gap-2">
@@ -33,10 +37,16 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
                             </svg>
 
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" />
-                                <div className="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-white peer-checked:border peer-checked:border-gray-500/30 transition-all duration-300"></div>
-                                <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5 peer-checked:bg-gray-800"></span>
+                            <label className="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only"
+                                    checked={darkMode}
+                                    onChange={toggleTheme}
+                                />
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full transition-all duration-300">
+                                    <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-300 dark:translate-x-5"></span>
+                                </div>
                             </label>
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -59,15 +69,15 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                     <div class="mt-4 grid grid-cols-1 gap-4 px-3">
                         <div className="flex flex-col justify-center gap-1">
                             <p className="text-sm font-medium">Current Password</p>
-                            <input type="text" placeholder="Enter current password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full"/>
+                            <input type="text" placeholder="Enter current password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
                         </div>
                         <div className="flex flex-col justify-center gap-1">
                             <p className="text-sm font-medium">New Password</p>
-                            <input type="text" placeholder="Enter new password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full"/>
+                            <input type="text" placeholder="Enter new password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
                         </div>
                         <div className="flex flex-col justify-center gap-1">
                             <p className="text-sm font-medium">Confirm New Password</p>
-                            <input type="text" placeholder="Confirm new password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full"/>
+                            <input type="text" placeholder="Confirm new password" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
                         </div>
                         <button className="text-sm bg-black py-2 text-white rounded-sm hover:bg-zinc-800 cursor-pointer">Update Password</button>
                     </div>
