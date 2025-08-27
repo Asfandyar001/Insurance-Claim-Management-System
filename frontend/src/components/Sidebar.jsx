@@ -15,8 +15,8 @@ export default function Sidebar({ setOpenAddClaim }) {
         </svg>
 
       ),
-      activeBg: 'bg-gray-300',
-      activeText: 'text-black',
+      activeBg: 'bg-gray-300 dark:bg-slate-800',
+      activeText: 'text-black dark:text-white',
     },
     {
       label: 'Active Claims',
@@ -27,14 +27,14 @@ export default function Sidebar({ setOpenAddClaim }) {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6 text-orange-400">
+          className="w-6 h-6 text-orange-400 dark:text-[#ED9B0C]">
           <path strokeLinecap="round"
             strokeLinejoin="round"
             d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
       ),
-      activeBg: 'bg-orange-100',
-      activeText: 'text-orange-400',
+      activeBg: 'bg-orange-100 dark:bg-[#ED9B0C]/12',
+      activeText: 'text-orange-400 dark:text-[#ED9B0C]',
     },
     {
       label: 'Closed Claims',
@@ -45,8 +45,8 @@ export default function Sidebar({ setOpenAddClaim }) {
         </svg>
 
       ),
-      activeBg: 'bg-green-100',
-      activeText: 'text-green-600',
+      activeBg: 'bg-green-100 dark:bg-[#169D48]/15',
+      activeText: 'text-green-600 dark:text-[#169D48]',
     },
   ];
 
@@ -54,24 +54,24 @@ export default function Sidebar({ setOpenAddClaim }) {
     <div
       className={`
         ${collapsed ? 'w-16' : 'w-70'}
-        bg-white border-r-2 border-gray-200 min-h-screen transition-all duration-300
-        flex-col
+        bg-white border-r-2 border-gray-200 dark:border-gray-800 min-h-screen transition-all duration-300
+        flex-col dark:bg-slate-950
       `}
     >
 
       {/* This div is for main CompanyName and software type then a button for collapsing */}
-      <div className={`py-3.5 ${collapsed ? 'justify-center' : 'justify-between'} flex items-center border-b-2 border-gray-200`}>
+      <div className={`py-3.5 ${collapsed ? 'justify-center' : 'justify-between'} flex items-center border-b-2 border-gray-200 dark:border-gray-800`}>
         {!collapsed && (
           <div className="flex flex-col ml-4">
-            <h2 className="text-lg font-bold">LEADS</h2>
+            <h2 className="text-lg font-bold dark:text-white">LEADS</h2>
             <p className="text-xs text-gray-500">Management System</p>
           </div>
         )}
 
-        <div className={`${collapsed ? 'my-0.5 hover:bg-gray-200 transition-colors rounded-md' : ' hover:bg-gray-200 transition-colors rounded-md  mr-2'} p-2 cursor-pointer`} onClick={() => setCollapsed(!collapsed)}>
+        <div className={`${collapsed ? 'my-0.5 hover:bg-gray-200 transition-colors rounded-md' : ' hover:bg-gray-200 transition-colors rounded-md  mr-2'} p-2 cursor-pointer dark:hover:bg-gray-800`} onClick={() => setCollapsed(!collapsed)}>
           <button
             className={`
-              text-gray-700 transition-transform duration-400 cursor-pointer
+              text-gray-700 transition-transform duration-400 cursor-pointer dark:text-white
               ${collapsed ? 'rotate-180' : 'rotate-0'}
             `}
           >
@@ -89,7 +89,7 @@ export default function Sidebar({ setOpenAddClaim }) {
       </div>
 
       {/* This div is add Claim */}
-      <div className="p-4 space-y-2 border-b-2 border-gray-200">
+      <div className="p-4 space-y-2 border-b-2 border-gray-200 dark:border-gray-800">
         {!collapsed && (
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
             Quick Actions
@@ -117,7 +117,7 @@ export default function Sidebar({ setOpenAddClaim }) {
           </svg>
 
           {!collapsed && (
-            <span className="ml-3 font-medium text-sm">Add New Claim</span>
+            <span className="ml-3 font-medium text-sm dark:text-white">Add New Claim</span>
           )}
         </button>
       </div>
@@ -139,15 +139,15 @@ export default function Sidebar({ setOpenAddClaim }) {
                   to={item.path}
                   className={`flex ${!collapsed ? "pl-5" : "justify-center"} py-2 items-center rounded-md transition-colors
                     ${isActive
-                      ? `${item.activeBg} ${item.activeText} border-2 ${item.activeText} `
-                      : 'hover:bg-gray-100 text-black'}
+                      ? `${item.activeBg} ${item.activeText} border-2 dark:border-1 ${item.activeText} `
+                      : 'hover:bg-gray-100 text-black dark:text-white dark:hover:bg-gray-800'}
                       font-medium`}
 
                 >
                   {item.icon}
 
                   {!collapsed && (
-                    <span className='ml-6'>
+                    <span className='ml-4'>
                       {item.label}
                     </span>
                   )}

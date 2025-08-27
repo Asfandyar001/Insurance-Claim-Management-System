@@ -3,16 +3,18 @@ import TopBar from './Topbar';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import AddClaim from '../pages/AddClaim.jsx';
+import Settings from '../pages/Settings.jsx';
 
 export default function MainLayout() {
     const [open, setOpen] = useState(false);
+    const [settings, setSettings] = useState(false);
 
     return (
-        <div className="flex relative">
+        <div className="flex relative dark:bg-slate-950">
             <Sidebar setOpenAddClaim={setOpen} />
 
             <div className="flex flex-col flex-1">
-                <TopBar />
+                <TopBar setOpenSettings={setSettings} />
 
                 <div className="p-4">
                     <Outlet />
@@ -20,6 +22,7 @@ export default function MainLayout() {
             </div>
 
             <AddClaim open={open} onClose={() => setOpen(false)} onSubmit={()=> setOpen(false)} />
+            <Settings open={settings} onClose={()=>setSettings(false)} onSubmit={()=>setSettings(false)} />
         </div>
     );
 }
