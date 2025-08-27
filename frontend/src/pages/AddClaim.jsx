@@ -86,6 +86,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
     ];
 
     const { toast } = useToast();
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         setCurrentStep(1);
@@ -182,6 +183,8 @@ export default function AddClaim({ open, onClose, onSubmit }) {
     };
 
     const handleSubmit = async () => {
+        setIsSaving(true);
+
         if (!validateCurrentStep()) {
             toast({
                 title: "Fill out all required fields.",
@@ -211,9 +214,10 @@ export default function AddClaim({ open, onClose, onSubmit }) {
             onClose();
         } catch (error) {
             toast({
-                title: "Failed to add claim",
+                title: "Failed to create a claim",
                 variant: "destructive",
             });
+            setIsSaving(false);
         }
     };
 
@@ -223,19 +227,19 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-2 gap-5">
                         <div>
-                            <p className="text-sm font-medium">LCM Ref *</p>
-                            <input type="text" value={formData.lcmRef} onChange={(e) => updateFormData("lcmRef", e.target.value)} placeholder="Enter LCM reference" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">LCM Ref *</p>
+                            <input type="text" value={formData.lcmRef} onChange={(e) => updateFormData("lcmRef", e.target.value)} placeholder="Enter LCM reference" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Claim No. *</p>
-                            <input type="text" value={formData.claimNo} onChange={(e) => updateFormData("claimNo", e.target.value)} placeholder="Enter claim number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Claim No. *</p>
+                            <input type="text" value={formData.claimNo} onChange={(e) => updateFormData("claimNo", e.target.value)} placeholder="Enter claim number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Loss Type *</p>
+                            <p className="text-sm font-medium dark:text-white">Loss Type *</p>
                             <select
                                 value={formData.lossType}
                                 onChange={(e) => updateFormData("lossType", e.target.value)}
-                                className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full"
+                                className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500"
                             >
                                 <option value="">Select loss type</option>
                                 <option value="Escape of Liquid">Escape of Liquid</option>
@@ -254,11 +258,11 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                             </select>
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Assessment Type *</p>
+                            <p className="text-sm font-medium dark:text-white">Assessment Type *</p>
                             <select
                                 value={formData.assessmentType}
                                 onChange={(e) => updateFormData("assessmentType", e.target.value)}
-                                className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full"
+                                className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500"
                             >
                                 <option value="">Select assessment type</option>
                                 <option value="On-Site">On-Site</option>
@@ -266,20 +270,20 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                             </select>
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Date of Loss</p>
-                            <input type="date" value={formData.dateOfLoss} onChange={(e) => updateFormData("dateOfLoss", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Date of Loss</p>
+                            <input type="date" value={formData.dateOfLoss} onChange={(e) => updateFormData("dateOfLoss", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Date Recieved</p>
-                            <input type="date" value={formData.dateReceived} onChange={(e) => updateFormData("dateReceived", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Date Recieved</p>
+                            <input type="date" value={formData.dateReceived} onChange={(e) => updateFormData("dateReceived", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Reserve Amount</p>
-                            <input type="number" value={formData.reserveAmount} onChange={(e) => updateFormData("reserveAmount", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Reserve Amount</p>
+                            <input type="number" value={formData.reserveAmount} onChange={(e) => updateFormData("reserveAmount", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Crime Report Number</p>
-                            <input type="number" value={formData.crimeReportNumber} onChange={(e) => updateFormData("crimeReportNumber", e.target.value)} placeholder="Enter Crime Report Number (if applicable)" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Crime Report Number</p>
+                            <input type="number" value={formData.crimeReportNumber} onChange={(e) => updateFormData("crimeReportNumber", e.target.value)} placeholder="Enter Crime Report Number (if applicable)" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                     </div>
                 )
@@ -288,28 +292,28 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-2 gap-5">
                         <div>
-                            <p className="text-sm font-medium">Acknowledgment Sent Date</p>
-                            <input type="date" value={formData.acknowledgmentSentDate} onChange={(e) => updateFormData("acknowledgmentSentDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Acknowledgment Sent Date</p>
+                            <input type="date" value={formData.acknowledgmentSentDate} onChange={(e) => updateFormData("acknowledgmentSentDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">First Contact Date</p>
-                            <input type="date" value={formData.firstContactDate} onChange={(e) => updateFormData("firstContactDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">First Contact Date</p>
+                            <input type="date" value={formData.firstContactDate} onChange={(e) => updateFormData("firstContactDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Assess Date / Site Visit Date</p>
-                            <input type="date" value={formData.assessDate} onChange={(e) => updateFormData("assessDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Assess Date / Site Visit Date</p>
+                            <input type="date" value={formData.assessDate} onChange={(e) => updateFormData("assessDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">First Report Sent Date</p>
-                            <input type="date" value={formData.firstReportSentDate} onChange={(e) => updateFormData("firstReportSentDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">First Report Sent Date</p>
+                            <input type="date" value={formData.firstReportSentDate} onChange={(e) => updateFormData("firstReportSentDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Insurer Update Date</p>
-                            <input type="date" value={formData.insurerUpdateDate} onChange={(e) => updateFormData("insurerUpdateDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Insurer Update Date</p>
+                            <input type="date" value={formData.insurerUpdateDate} onChange={(e) => updateFormData("insurerUpdateDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Current PH Contact Date</p>
-                            <input type="date" value={formData.currentPHContactDate} onChange={(e) => updateFormData("currentPHContactDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Current PH Contact Date</p>
+                            <input type="date" value={formData.currentPHContactDate} onChange={(e) => updateFormData("currentPHContactDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                     </div>
                 )
@@ -318,30 +322,30 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                     <div className="mt-5">
                         <div className="grid grid-cols-1 gap-5">
                             <div>
-                                <p className="text-sm font-medium">Insured Name *</p>
-                                <input type="text" value={formData.insuredName} onChange={(e) => updateFormData("insuredName", e.target.value)} placeholder="Enter insured person/company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">Insured Name *</p>
+                                <input type="text" value={formData.insuredName} onChange={(e) => updateFormData("insuredName", e.target.value)} placeholder="Enter insured person/company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium">Address</p>
-                                <textarea type="text" value={formData.insuredAddress} onChange={(e) => updateFormData("insuredAddress", e.target.value)} placeholder="Enter full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">Address</p>
+                                <textarea type="text" value={formData.insuredAddress} onChange={(e) => updateFormData("insuredAddress", e.target.value)} placeholder="Enter full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-5">
                             <div>
-                                <p className="text-sm font-medium">Phone</p>
-                                <input type="number" value={formData.insuredPhone} onChange={(e) => updateFormData("insuredPhone", e.target.value)} placeholder="Phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">Phone</p>
+                                <input type="number" value={formData.insuredPhone} onChange={(e) => updateFormData("insuredPhone", e.target.value)} placeholder="Phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium">Email</p>
-                                <input type="text" value={formData.insuredEmail} onChange={(e) => updateFormData("insuredEmail", e.target.value)} placeholder="Email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">Email</p>
+                                <input type="text" value={formData.insuredEmail} onChange={(e) => updateFormData("insuredEmail", e.target.value)} placeholder="Email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium">ABN</p>
-                                <input type="number" value={formData.abn} onChange={(e) => updateFormData("abn", e.target.value)} placeholder="Australian Business Number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">ABN</p>
+                                <input type="number" value={formData.abn} onChange={(e) => updateFormData("abn", e.target.value)} placeholder="Australian Business Number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium">ITCE</p>
-                                <input type="number" value={formData.itce} onChange={(e) => updateFormData("itce", e.target.value)} placeholder="ITCE number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                                <p className="text-sm font-medium dark:text-white">ITCE</p>
+                                <input type="number" value={formData.itce} onChange={(e) => updateFormData("itce", e.target.value)} placeholder="ITCE number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                             </div>
                         </div>
                     </div>
@@ -350,20 +354,20 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-2 gap-5">
                         <div>
-                            <p className="text-sm font-medium">Policy Type</p>
-                            <input type="text" value={formData.policyType} onChange={(e) => updateFormData("policyType", e.target.value)} placeholder="Enter Policy Type" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Policy Type</p>
+                            <input type="text" value={formData.policyType} onChange={(e) => updateFormData("policyType", e.target.value)} placeholder="Enter Policy Type" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Policy No.</p>
-                            <input type="text" value={formData.policyNo} onChange={(e) => updateFormData("policyNo", e.target.value)} placeholder="Policy number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Policy No.</p>
+                            <input type="text" value={formData.policyNo} onChange={(e) => updateFormData("policyNo", e.target.value)} placeholder="Policy number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Inception Date</p>
-                            <input type="date" value={formData.inceptionDate} onChange={(e) => updateFormData("inceptionDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Inception Date</p>
+                            <input type="date" value={formData.inceptionDate} onChange={(e) => updateFormData("inceptionDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Due Date</p>
-                            <input type="date" value={formData.dueDate} onChange={(e) => updateFormData("dueDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Due Date</p>
+                            <input type="date" value={formData.dueDate} onChange={(e) => updateFormData("dueDate", e.target.value)} className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-500" />
                         </div>
                     </div>
                 )
@@ -371,20 +375,20 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-2 gap-5">
                         <div className="col-span-2">
-                            <p className="text-sm font-medium">Broker Name</p>
-                            <input type="text" value={formData.brokerName} onChange={(e) => updateFormData("brokerName", e.target.value)} placeholder="Broker company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Broker Name</p>
+                            <input type="text" value={formData.brokerName} onChange={(e) => updateFormData("brokerName", e.target.value)} placeholder="Broker company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Phone</p>
-                            <input type="number" value={formData.brokerPhone} onChange={(e) => updateFormData("brokerPhone", e.target.value)} placeholder="Broker phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Phone</p>
+                            <input type="number" value={formData.brokerPhone} onChange={(e) => updateFormData("brokerPhone", e.target.value)} placeholder="Broker phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Email</p>
-                            <input type="text" value={formData.brokerEmail} onChange={(e) => updateFormData("brokerEmail", e.target.value)} placeholder="Broker email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Email</p>
+                            <input type="text" value={formData.brokerEmail} onChange={(e) => updateFormData("brokerEmail", e.target.value)} placeholder="Broker email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div className="col-span-2">
-                            <p className="text-sm font-medium">Address</p>
-                            <textarea type="text" value={formData.brokerAddress} onChange={(e) => updateFormData("brokerAddress", e.target.value)} placeholder="Broker full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Address</p>
+                            <textarea type="text" value={formData.brokerAddress} onChange={(e) => updateFormData("brokerAddress", e.target.value)} placeholder="Broker full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                     </div>
                 )
@@ -392,20 +396,20 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-2 gap-5">
                         <div className="col-span-2">
-                            <p className="text-sm font-medium">Insurer Name</p>
-                            <input type="text" value={formData.insurerName} onChange={(e) => updateFormData("insurerName", e.target.value)} placeholder="Insurer company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Insurer Name</p>
+                            <input type="text" value={formData.insurerName} onChange={(e) => updateFormData("insurerName", e.target.value)} placeholder="Insurer company name" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Phone</p>
-                            <input type="number" value={formData.insurerPhone} onChange={(e) => updateFormData("insurerPhone", e.target.value)} placeholder="Insurer phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Phone</p>
+                            <input type="number" value={formData.insurerPhone} onChange={(e) => updateFormData("insurerPhone", e.target.value)} placeholder="Insurer phone number" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Email</p>
-                            <input type="text" value={formData.insurerEmail} onChange={(e) => updateFormData("insurerEmail", e.target.value)} placeholder="Insurer email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Email</p>
+                            <input type="text" value={formData.insurerEmail} onChange={(e) => updateFormData("insurerEmail", e.target.value)} placeholder="Insurer email address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div className="col-span-2">
-                            <p className="text-sm font-medium">Address</p>
-                            <textarea type="text" value={formData.insurerAddress} onChange={(e) => updateFormData("insurerAddress", e.target.value)} placeholder="Insurer full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Address</p>
+                            <textarea type="text" value={formData.insurerAddress} onChange={(e) => updateFormData("insurerAddress", e.target.value)} placeholder="Insurer full address" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                     </div>
                 )
@@ -413,76 +417,76 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5 grid grid-cols-3 gap-5">
                         <div>
-                            <p className="text-sm font-medium">Hours</p>
-                            <input type="number" value={formData.hours} onChange={(e) => updateFormData("hours", e.target.value)} placeholder="0" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Hours</p>
+                            <input type="number" value={formData.hours} onChange={(e) => updateFormData("hours", e.target.value)} placeholder="0" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Hours Rate</p>
-                            <input type="number" value={formData.hoursRate} onChange={(e) => updateFormData("hoursRate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Hours Rate</p>
+                            <input type="number" value={formData.hoursRate} onChange={(e) => updateFormData("hoursRate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Professional Fees (hrs)</p>
-                            <input type="number" value={formData.professionalFeesHrs} onChange={(e) => updateFormData("professionalFeesHrs", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Professional Fees (hrs)</p>
+                            <input type="number" value={formData.professionalFeesHrs} onChange={(e) => updateFormData("professionalFeesHrs", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Professional Fees (flat)</p>
-                            <input type="number" value={formData.professionalFeesFlat} onChange={(e) => updateFormData("professionalFeesFlat", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Professional Fees (flat)</p>
+                            <input type="number" value={formData.professionalFeesFlat} onChange={(e) => updateFormData("professionalFeesFlat", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Mileage (kms)</p>
-                            <input type="number" value={formData.mileageKms} onChange={(e) => updateFormData("mileageKms", e.target.value)} placeholder="0" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Mileage (kms)</p>
+                            <input type="number" value={formData.mileageKms} onChange={(e) => updateFormData("mileageKms", e.target.value)} placeholder="0" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Mileage Rate</p>
-                            <input type="number" value={formData.mileageRate} onChange={(e) => updateFormData("mileageRate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Mileage Rate</p>
+                            <input type="number" value={formData.mileageRate} onChange={(e) => updateFormData("mileageRate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Senior Adjuster</p>
-                            <input type="number" value={formData.seniorAdjuster} onChange={(e) => updateFormData("seniorAdjuster", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Senior Adjuster</p>
+                            <input type="number" value={formData.seniorAdjuster} onChange={(e) => updateFormData("seniorAdjuster", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Fee Estimate</p>
-                            <input type="number" value={formData.feeEstimate} onChange={(e) => updateFormData("feeEstimate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Fee Estimate</p>
+                            <input type="number" value={formData.feeEstimate} onChange={(e) => updateFormData("feeEstimate", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Actual Fee (Ex GST)</p>
-                            <input type="number" value={formData.actualFeeExGST} onChange={(e) => updateFormData("actualFeeExGST", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Actual Fee (Ex GST)</p>
+                            <input type="number" value={formData.actualFeeExGST} onChange={(e) => updateFormData("actualFeeExGST", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">CAT Fee</p>
-                            <input type="number" value={formData.catFee} onChange={(e) => updateFormData("catFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">CAT Fee</p>
+                            <input type="number" value={formData.catFee} onChange={(e) => updateFormData("catFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Claim Management</p>
-                            <input type="number" value={formData.claimManagement} onChange={(e) => updateFormData("claimManagement", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Claim Management</p>
+                            <input type="number" value={formData.claimManagement} onChange={(e) => updateFormData("claimManagement", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Parking</p>
-                            <input type="number" value={formData.parking} onChange={(e) => updateFormData("parking", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Parking</p>
+                            <input type="number" value={formData.parking} onChange={(e) => updateFormData("parking", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Sub-contractor Fee</p>
-                            <input type="number" value={formData.subcontractorFee} onChange={(e) => updateFormData("subcontractorFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Sub-contractor Fee</p>
+                            <input type="number" value={formData.subcontractorFee} onChange={(e) => updateFormData("subcontractorFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Police / Fire Report</p>
-                            <input type="number" value={formData.policeFireReport} onChange={(e) => updateFormData("policeFireReport", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Police / Fire Report</p>
+                            <input type="number" value={formData.policeFireReport} onChange={(e) => updateFormData("policeFireReport", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Miscellaneous</p>
-                            <input type="number" value={formData.miscellaneous} onChange={(e) => updateFormData("miscellaneous", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Miscellaneous</p>
+                            <input type="number" value={formData.miscellaneous} onChange={(e) => updateFormData("miscellaneous", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Travel Time</p>
-                            <input type="number" value={formData.travelTime} onChange={(e) => updateFormData("travelTime", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Travel Time</p>
+                            <input type="number" value={formData.travelTime} onChange={(e) => updateFormData("travelTime", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Travel Cost</p>
-                            <input type="number" value={formData.travelCost} onChange={(e) => updateFormData("travelCost", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Travel Cost</p>
+                            <input type="number" value={formData.travelCost} onChange={(e) => updateFormData("travelCost", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium">Shared Fee</p>
-                            <input type="number" value={formData.sharedFee} onChange={(e) => updateFormData("sharedFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Shared Fee</p>
+                            <input type="number" value={formData.sharedFee} onChange={(e) => updateFormData("sharedFee", e.target.value)} placeholder="0.00" className="border-2 border-gray-400/30 rounded text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                     </div>
                 )
@@ -490,8 +494,8 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 return (
                     <div className="mt-5">
                         <div>
-                            <p className="text-sm font-medium">Additional Description</p>
-                            <textarea type="text" value={formData.description} onChange={(e) => updateFormData("description", e.target.value)} placeholder="Enter any additional notes, details, or description about this claim..." className="border-2 border-gray-400/30 rounded h-70 text-sm p-2.5 w-full" />
+                            <p className="text-sm font-medium dark:text-white">Additional Description</p>
+                            <textarea type="text" value={formData.description} onChange={(e) => updateFormData("description", e.target.value)} placeholder="Enter any additional notes, details, or description about this claim..." className="border-2 border-gray-400/30 rounded h-70 text-sm p-2.5 w-full dark:text-gray-300" />
                         </div>
                     </div>
                 )
@@ -507,19 +511,19 @@ export default function AddClaim({ open, onClose, onSubmit }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-11/12 transition-all duration-200 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
+                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-11/12 transition-all duration-200 dark:bg-slate-950 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
                     }`}
             >
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer"
+                    className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer dark:hover:text-white"
                 >
                     ✕
                 </button>
 
                 {/* Header */}
                 <div className="flex items-center">
-                    <h2 className="text-lg font-semibold pb-4">Add New Claim </h2>
+                    <h2 className="text-lg font-semibold pb-4 dark:text-white">Add New Claim </h2>
                 </div>
 
                 {/* form info */}
@@ -529,7 +533,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Completion Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden dark:bg-gray-200/15">
                     <div
                         className="bg-blue-500 h-4 transition-all duration-300"
                         style={{ width: `${progress}%` }}
@@ -541,7 +545,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 <div className="mt-7 border rounded-md border-gray-500/30 p-4 max-h-106 overflow-auto">
                     {/* Fields Info */}
                     <div className="flex flex-col justify-center items-start">
-                        <h3 className="text-lg font-semibold pb-2">{FORM_STEPS[currentStep - 1].title}</h3>
+                        <h3 className="text-lg font-semibold pb-2 dark:text-white">{FORM_STEPS[currentStep - 1].title}</h3>
                         <p className="text-sm text-gray-500">{FORM_STEPS[currentStep - 1].description}</p>
                     </div>
 
@@ -551,19 +555,25 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Footer */}
-                <button onClick={handlePrevious} disabled={currentStep === 1} className="absolute bottom-4 left-7 bg-white border border-gray-400/30 rounded-md py-2 px-5 flex items-center gap-2 hover:bg-gray-200 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                <button onClick={handlePrevious} disabled={currentStep === 1} className="absolute bottom-4 left-7 bg-white border border-gray-400/30 rounded-md py-2 px-5 flex items-center gap-2 hover:bg-gray-200 cursor-pointer dark:bg-slate-950 dark:hover:bg-gray-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 dark:text-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
-                    <p>Previous</p>
+                    <p className="dark:text-white">Previous</p>
                 </button>
 
                 {currentStep === FORM_STEPS.length ? (
-                    <button onClick={handleSubmit} className="absolute bottom-4 right-7 bg-green-600 border rounded-md py-2 px-5 text-white flex items-center gap-2 hover:bg-green-700 cursor-pointer">
-                        Create Claim
+                    <button
+                        onClick={handleSubmit}
+                        disabled={isSaving}
+                        className={`absolute bottom-4 right-7 rounded-md py-2 px-5 text-white flex items-center gap-2 transition-all duration-300
+          ${isSaving ? 'bg-green-700 cursor-not-allowed opacity-70' : 'bg-green-600 hover:bg-green-700 cursor-pointer'}
+        `}
+                    >
+                        {isSaving ? 'Creating...' : 'Create Claim'}
                     </button>
                 ) : (
-                    <button onClick={handleNext} className="absolute bottom-4 right-7 bg-blue-600 border rounded-md py-2 px-5 text-white flex items-center gap-2 hover:bg-blue-700 cursor-pointer">
+                    <button onClick={handleNext} className="absolute bottom-4 right-7 bg-blue-600 rounded-md py-2 px-5 text-white flex items-center gap-2 hover:bg-blue-700 cursor-pointer">
                         <p>Next</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
