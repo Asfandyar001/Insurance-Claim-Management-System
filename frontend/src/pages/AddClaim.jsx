@@ -511,7 +511,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-11/12 transition-all duration-200 dark:bg-slate-950 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
+                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-11/12 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
                     }`}
             >
                 <button

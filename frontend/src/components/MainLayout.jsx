@@ -10,7 +10,7 @@ export default function MainLayout() {
     const [settings, setSettings] = useState(false);
 
     return (
-        <div className="flex relative">
+        <div className="flex relative dark:bg-slate-950">
             <Sidebar setOpenAddClaim={setOpen} />
 
             <div className="flex flex-col flex-1">

@@ -5,7 +5,7 @@ export default function Settings({ open, onClose, onSubmit }) {
 
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
-            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 transition-all duration-200 dark:bg-slate-950 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
+            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
                 <button onClick={onClose} className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer dark:hover:text-white">✕</button>
 
                 {/* Header */}
