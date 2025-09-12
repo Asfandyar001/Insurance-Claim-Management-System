@@ -1,4 +1,7 @@
+import { useState, useEffect } from "react";
 import CustomSelect from "../components/CustomeSelect";
+import axios from 'axios';
+
 
 export default function Active() {
   const filter1 = ["Due Next", "Date of Loss", "Amount Made"];
@@ -7,6 +10,37 @@ export default function Active() {
   </svg>;
 
   const filter2 = ["Ascending", "Descending"];
+
+  const [claims, setClaims] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchClaims = async () => {
+      try {
+        const res = await axios.get("/api/claims");
+        setClaims(res.data);
+        console.log("Response:", res.data);
+      } catch (err) {
+        setError(
+          "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClaims();
+  }, []);
+
+  if (loading || error) {
+    return (
+      <div className="flex items-center justify-center mt-50">
+        {loading && <p className="text-gray-600 dark:text-gray-300">Loading claims...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+      </div>
+    );
+  }
 
   return (
     <div>
