@@ -148,7 +148,7 @@ export default function Active() {
           {claims.map((claim) => (
             <li
               key={claim._id}
-              className="border p-4 rounded-lg border-gray-300 dark:border-gray-800 flex flex-col gap-4"
+              className="border mb-4 p-4 rounded-lg border-gray-300 dark:border-gray-800 flex flex-col gap-4"
             >
               <div>
                 <div className="flex flex-row justify-between">
