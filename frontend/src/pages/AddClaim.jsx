@@ -198,7 +198,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 daysOpen: 0
             };
 
-            const response = await axios.post("http://localhost:5000/api/claims", payload);
+            const response = await axios.post("https://insc.duckdns.org/api/claims", payload);
 
             toast({
                 title: "Claim Added Successfully",
