@@ -555,11 +555,11 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Footer */}
-                <button onClick={handlePrevious} disabled={currentStep === 1} className="absolute bottom-4 left-7 bg-white border border-gray-400/30 rounded-md py-2 px-5 flex items-center gap-2 hover:bg-gray-200 cursor-pointer dark:bg-slate-950 dark:hover:bg-gray-900">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 dark:text-white">
+                <button onClick={handlePrevious} disabled={currentStep === 1} className={`absolute bottom-4 left-7 rounded-md py-2 px-5 flex items-center gap-2 ${currentStep === 1? "bg-gray-100 border border-gray-300 text-gray-400 cursor-not-allowed dark:border-zinc-700 dark:bg-slate-900" : "bg-white border border-gray-400/30 hover:bg-gray-200 cursor-pointer dark:bg-slate-950 dark:hover:bg-gray-900 dark:text-white"}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`size-4 ${currentStep === 1? "dark:text-zinc-600" : "dark:text-white" }`}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
-                    <p className="dark:text-white">Previous</p>
+                    <p className={`${currentStep === 1? "dark:text-zinc-600" : "dark:text-white" }`}>Previous</p>
                 </button>
 
                 {currentStep === FORM_STEPS.length ? (
