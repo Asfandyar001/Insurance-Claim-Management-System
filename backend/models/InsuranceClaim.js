@@ -7,6 +7,11 @@ const contactSchema = new mongoose.Schema({
     email: String
 }, { _id: false });
 
+const timelineSchema = new mongoose.Schema({
+    description: String,
+    hours: Number
+},{id:false});
+
 const insuranceClaimSchema = new mongoose.Schema({
     lcmRef: { type: String, required: true },
     claimNo: { type: String, required: true },
@@ -34,7 +39,7 @@ const insuranceClaimSchema = new mongoose.Schema({
         enum: ["On-Site", "Desktop"],
         required: true
     },
-    status: { type: String, enum: ["Active", "Closed", "Pending"], default: "Active" },
+    status: { type: String, enum: ["Active", "Closed"], default: "Active" },
     dateOfLoss: Date,
     dateReceived: Date,
     acknowledgmentSentDate: Date,
@@ -74,7 +79,8 @@ const insuranceClaimSchema = new mongoose.Schema({
     miscellaneous: Number,
     travelTime: Number,
     travelCost: Number,
-    sharedFee: Number
+    sharedFee: Number,
+    timeline: timelineSchema
 }, { timestamps: true });
 
 export default mongoose.model("InsuranceClaim", insuranceClaimSchema);
