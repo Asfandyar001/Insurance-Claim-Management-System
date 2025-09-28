@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CustomSelect from "../components/CustomeSelect";
 import IconMenu from "../components/IconMenu";
 import axios from 'axios';
-
+import ViewDetails from "./ViewDetails.jsx"
 
 export default function Active() {
   const filter1 = ["Due Next", "Date of Loss", "Amount Made"];
@@ -22,6 +22,8 @@ export default function Active() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [openView, setOpenView] = useState(false)
+  const [selectedClaim, setSelectedClaim] = useState(null);
 
   useEffect(() => {
     const fetchClaims = async () => {
@@ -41,6 +43,10 @@ export default function Active() {
     fetchClaims();
   }, []);
 
+  const handleViewButton = (claim) =>{
+    setOpenView(true);
+    setSelectedClaim(claim);
+  }
   const handleEditClaim = (claim) => {
     console.log("Edit Claim Clicked ", claim.claimNo)
   }
@@ -290,7 +296,7 @@ export default function Active() {
 
                   <div className="flex flex-row justify-center items-center gap-2">
 
-                    <div className="flex flex-row justify-center items-center border border-gray-300 rounded-md px-4 py-1 gap-2 hover:bg-gray-200 cursor-pointer dark:border-gray-800 dark:hover:bg-slate-900">
+                    <div onClick={()=>handleViewButton(claim)} className="flex flex-row justify-center items-center border border-gray-300 rounded-md px-4 py-1 gap-2 hover:bg-gray-200 cursor-pointer dark:border-gray-800 dark:hover:bg-slate-900">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4.5 dark:text-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -310,6 +316,8 @@ export default function Active() {
         </ul>
       )
       }
+      {/*Mounting Model*/}
+      {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo = {selectedClaim} />)}
     </div >
   );
 }
