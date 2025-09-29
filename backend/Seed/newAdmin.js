@@ -35,17 +35,17 @@ const seedAdmin = async () => {
     await connectDB();
 
     // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ username: "Bilal321" });
+    const existingAdmin = await Admin.findOne({ username: "admin@gmail.com" });
     if (existingAdmin) {
-      console.log("Admin already exists with username Bilal321");
+      console.log("Admin already exists with username admin@gmail.com");
       await mongoose.disconnect();
       return;
     }
 
     // Create new admin
     const admin = new Admin({
-      username: "Bilal321",
-      password: "claimsystem321", // This will be hashed by the pre-save hook
+      username: "admin@gmail.com",
+      password: "password123", // This will be hashed by the pre-save hook
     });
 
     await admin.save();

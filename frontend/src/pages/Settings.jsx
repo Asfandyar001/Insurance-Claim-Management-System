@@ -1,6 +1,7 @@
 import { useTheme } from '../hooks/ThemeContext';
 import { useToast } from "../hooks/use-toast";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
 export default function Settings({ open, onClose, onSubmit }) {
     const { darkMode, toggleTheme } = useTheme();
@@ -40,8 +41,20 @@ export default function Settings({ open, onClose, onSubmit }) {
         }
 
         try {
-            // Call API here
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const token = localStorage.getItem("token");
+            await axios.put(
+                "http://localhost:5000/api/auth/update-password",
+                {
+                    currentPassword,
+                    newPassword,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
             toast({ title: "Password Updated Successfully", variant: "success" });
 
             setCurrentPassword("");
@@ -55,9 +68,24 @@ export default function Settings({ open, onClose, onSubmit }) {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+
+            toast({ title: "Logged out successfully", variant: "success" });
+
+            window.location.href = "/login";
+        } catch (error) {
+            toast({
+                title: error.response?.data?.message || "Logout failed",
+                variant: "destructive",
+            });
+        }
+    };
+
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
-            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
+            <div onClick={(e) => e.stopPropagation()} className={`relative bg-white rounded-xl shadow p-6 w-2xl h-11/12 flex flex-col gap-2.5 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
                 <button onClick={onClose} className="absolute top-2 right-4 p-1 rounded-lg text-gray-400 hover:text-black cursor-pointer dark:hover:text-white">✕</button>
 
                 {/* Header */}
@@ -70,7 +98,7 @@ export default function Settings({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Appearance */}
-                <div className="mt-4 border rounded-md border-gray-500/30 p-4 h-auto overflow-auto">
+                <div className="border rounded-md border-gray-500/30 p-4 h-auto overflow-auto">
                     <div className="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 dark:text-white">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
@@ -110,7 +138,7 @@ export default function Settings({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Change Password */}
-                <div className="mt-4 border rounded-md border-gray-500/30 p-4 h-auto overflow-auto">
+                <div className="border rounded-md border-gray-500/30 p-4 h-auto overflow-auto">
 
                     <div className='flex justify-between items-center pr-5'>
                         <div className="flex items-center gap-2">
@@ -179,7 +207,7 @@ export default function Settings({ open, onClose, onSubmit }) {
                         <button
                             onClick={handlePasswordChange}
                             disabled={isUpdating}
-                            className={`text-sm py-2 text-white rounded-sm dark:text-black
+                            className={`text-sm py-2 text-white transition rounded-sm dark:text-black
           ${isUpdating ? 'bg-zinc-800 dark:bg-gray-300 cursor-not-allowed opacity-70' : 'bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-gray-300 cursor-pointer'}
         `}
                         >
@@ -187,7 +215,15 @@ export default function Settings({ open, onClose, onSubmit }) {
                         </button>
                     </div>
                 </div>
-
+                {/* Logout bottom */}
+                <div className="mt-auto flex justify-end">
+                    <button
+                        onClick={handleLogout}
+                        className="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md shadow-md transition"
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
         </div>
     );

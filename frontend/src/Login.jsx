@@ -1,16 +1,43 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock, User } from "lucide-react";
+import { useToast } from "./hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login with:", email, password);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username: email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        window.location.href = "/";
+      } else {
+        toast({
+          title: data.message || "Login failed",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Something went wrong",
+        variant: "destructive",
+      });
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -56,12 +83,10 @@ const Login = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-200"
-          >
-            Sign In
+          <button type="submit" disabled={loading} className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-200">
+            {loading ? "Signing in..." : "Sign In"}
           </button>
+
         </form>
 
         <p className="text-xs text-gray-400 text-center mt-6">
