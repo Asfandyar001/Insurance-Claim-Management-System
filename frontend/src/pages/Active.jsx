@@ -276,7 +276,11 @@ export default function Active() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5" />
                     </svg>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium dark:text-white">{claim.dateOfLoss?.split("T")[0]}</p>
+                      <p className="text-sm font-medium dark:text-white">
+                        {claim.dateOfLoss && claim.dateOfLoss !== ""
+                          ? claim.dateOfLoss.split("T")[0]
+                          : "Not Specified"}
+                      </p>
                       <p className="text-sm text-gray-500">Loss Date</p>
                     </div>
                   </div>
@@ -298,7 +302,7 @@ export default function Active() {
 
                 <div className="flex flex-row items-center justify-between">
 
-                  <p className="text-sm text-gray-500">Received: {claim.dateReceived?.split("T")[0]}</p>
+                  <p className="text-sm text-gray-500">Received: {claim.dateReceived && claim.dateReceived !== "" ? claim.dateReceived.split("T")[0] : "Not Specified"} </p>
 
                   <div className="flex flex-row justify-center items-center gap-2">
 
