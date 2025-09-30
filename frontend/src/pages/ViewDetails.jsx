@@ -6,6 +6,7 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
     if (!claimInfo) return null;
 
     const tabs = ["Summary", "Parties", "Timeline", "Invoicing", "TimeStamps"];
+    const currency = "$"
 
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
@@ -216,8 +217,135 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                                 </div>
                             </div>
                         )}
-                        {activeTab === "Timeline" && <p className="dark:text-white">🗓️ Timeline of the claim.</p>}
-                        {activeTab === "Invoicing" && <p className="dark:text-white">💰 Invoicing details shown here.</p>}
+
+                        {activeTab === "Timeline" && (
+                            <div className="border rounded-xl border-gray-500/30 p-4 col-span-2 h-full overflow-y-auto">
+                                {/* Headings */}
+                                <div className="flex flex-col justify-center items-start gap-1">
+                                    <h1 className="text-2xl font-medium">Compliance & Timeline</h1>
+                                    <p className="text-sm text-gray-500">Important dates and compliance milestones</p>
+                                </div>
+
+                                {/* Timeline Details */}
+                                <div className="grid grid-cols-2 mt-8 gap-5">
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">Acknowledgment Sent:</p>
+                                        <p className="dark:text-white">{claimInfo.acknowledgmentSentDate?.split("T")[0] && claimInfo.acknowledgmentSentDate?.split("T")[0] !== "" ? claimInfo.acknowledgmentSentDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">First Report Sent:</p>
+                                        <p className="dark:text-white">{claimInfo.firstReportSentDate?.split("T")[0] && claimInfo.firstReportSentDate?.split("T")[0] !== "" ? claimInfo.firstReportSentDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">First Contact Date:</p>
+                                        <p className="dark:text-white">{claimInfo.firstContactDate?.split("T")[0] && claimInfo.firstContactDate?.split("T")[0] !== "" ? claimInfo.firstContactDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">Insurer Update:</p>
+                                        <p className="dark:text-white">{claimInfo.insurerUpdateDate?.split("T")[0] && claimInfo.insurerUpdateDate?.split("T")[0] !== "" ? claimInfo.insurerUpdateDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">Assessment Date:</p>
+                                        <p className="dark:text-white">{claimInfo.assessDate?.split("T")[0] && claimInfo.assessDate?.split("T")[0] !== "" ? claimInfo.assessDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400 text-lg">Current PH Contact:</p>
+                                        <p className="dark:text-white">{claimInfo.currentPHContactDate?.split("T")[0] && claimInfo.currentPHContactDate?.split("T")[0] !== "" ? claimInfo.currentPHContactDate?.split("T")[0] : "Not Specified"}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {activeTab === "Invoicing" && (
+                            <div className="border rounded-xl border-gray-500/30 p-4 col-span-2 h-full overflow-y-auto">
+                                {/* Heading */}
+                                <div className="flex flex-row justify-start items-center dark:text-white text-2xl font-medium gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                    </svg>
+                                    <h1>Billing & Fee Information</h1>
+                                </div>
+
+                                {/* Invoicing Details */}
+                                <div className="grid grid-cols-3 gap-2.5 mt-3.5">
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Hours:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.hours && claimInfo.hours !== "" ? claimInfo.hours : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Hours Rate:</p>
+                                        <p className="dark:text-white  text-sm">{claimInfo.hoursRate && claimInfo.hoursRate !== "" ? `${currency}${claimInfo.hoursRate}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Professional Fees (hrs):</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.professionalFeesHrs && claimInfo.professionalFeesHrs !== "" ? `${currency}${claimInfo.professionalFeesHrs}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Professional Fees (Flat):</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.professionalFeesFlat && claimInfo.professionalFeesFlat !== "" ? `${currency}${claimInfo.professionalFeesFlat}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Mileage (Kms):</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.mileageKms && claimInfo.mileageKms !== "" ? claimInfo.mileageKms : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Mileage Rate:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.mileageRate && claimInfo.mileageRate !== "" ? `${currency}${claimInfo.mileageRate}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Fee Estimate:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.feeEstimate && claimInfo.feeEstimate !== "" ? `${currency}${claimInfo.feeEstimate}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Actual Fee (Ex GST):</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.actualFeeExGST && claimInfo.actualFeeExGST !== "" ? `${currency}${claimInfo.actualFeeExGST}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Reserve Amount:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.reserveAmount && claimInfo.reserveAmount !== "" ? `${currency}${claimInfo.reserveAmount}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Senior Adjuster:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.seniorAdjuster && claimInfo.seniorAdjuster !== "" ? `${currency}${claimInfo.seniorAdjuster}` : "No"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">CAT Fee:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.catFee && claimInfo.catFee !== "" ? `${currency}${claimInfo.catFee}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Claim Management:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.claimManagement && claimInfo.claimManagement !== "" ? `${currency}${claimInfo.claimManagement}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Parking:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.parking && claimInfo.parking !== "" ? `${currency}${claimInfo.parking}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Sub-contractor Fee:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.subcontractorFee && claimInfo.subcontractorFee !== "" ? `${currency}${claimInfo.subcontractorFee}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Police / Fire Report:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.policeFireReport && claimInfo.policeFireReport !== "" ? `${currency}${claimInfo.policeFireReport}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Miscellaneous:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.miscellaneous && claimInfo.miscellaneous !== "" ? `${currency}${claimInfo.miscellaneous}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Travel Time:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.travelTime && claimInfo.travelTime !== "" ? ` ${claimInfo.travelTime} hours` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Travel Cost:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.travelCost && claimInfo.travelCost !== "" ? `${currency}${claimInfo.travelCost}` : "Not Specified"} </p>
+                                    </div>
+                                    <div className="flex flex-col justify-center items-start font-medium">
+                                        <p className="text-zinc-500 dark:text-slate-400">Shared Fee:</p>
+                                        <p className="dark:text-white text-sm">{claimInfo.sharedFee && claimInfo.sharedFee !== "" ? `${currency}${claimInfo.sharedFee}` : "No"} </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         {activeTab === "TimeStamps" && (
                             <p className="dark:text-white">⏱️ Timestamps and logs will appear here.</p>
                         )}
