@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AddTimestamps from "./AddTimestamps";
 
-export default function ViewDetails({ open, onClose, claimInfo, onAdded }) {
+export default function ViewDetails({ open, onClose, claimInfo, onAdded, status }) {
     const [activeTab, setActiveTab] = useState("Summary");
     const [add, setAdd] = useState(false);
     const [addID, setAddID] = useState();
@@ -45,12 +45,20 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded }) {
                         </p>
                     </div>
 
-                    {/* Active Status */}
-                    <div className="flex items-center justify-center border rounded-4xl h-5.5 border-green-600 px-2.5 bg-green-100 dark:bg-[#169D48]/15 dark:border-[#169D48]/15 mt-3">
-                        <p className="text-xs text-green-600 dark:text-[#169D48] font-medium">
-                            Active
-                        </p>
-                    </div>
+                    {/* Active/Closed Status */}
+                    {status === 'active' ? (
+                        <div className="flex items-center justify-center border rounded-4xl h-5.5 border-green-600 px-2.5 bg-green-100 dark:bg-[#169D48]/15 dark:border-[#169D48]/15 mt-3">
+                            <p className="text-xs text-green-600 dark:text-[#169D48] font-medium">
+                                Active
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center border rounded-4xl h-5.5 border-red-600 px-2.5 bg-red-100 dark:bg-[#9d1616]/15 dark:border-[#9d1616]/15 mt-3">
+                            <p className="text-xs text-red-600 dark:text-[#9d1616] font-medium">
+                                Closed
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Navigation + Content */}
@@ -390,17 +398,19 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded }) {
                                         <h1>Activity Timeline</h1>
                                     </div>
 
-                                    <div className="grid grid-cols-2 items-center gap-0">
+                                    <div className={`${status === 'active' ? "grid grid-cols-2 items-center gap-0" : ""}`}>
                                         {/* Hours */}
                                         <p className="text-sm font-medium dark:text-white">Total: {claimInfo.timeline?.reduce((acc, item) => acc + (item.hours || 0), 0)} hours</p>
 
                                         {/* Button */}
-                                        <button onClick={() => handleAdd(claimInfo._id)} className="bg-black text-white rounded-md flex flex-row py-2 px-3 justify-center items-center gap-4 dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-gray-300 cursor-pointer">
+
+                                        {status === 'active' ? <button onClick={() => handleAdd(claimInfo._id)} className="bg-black text-white rounded-md flex flex-row py-2 px-3 justify-center items-center gap-4 dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-gray-300 cursor-pointer">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
                                             <p className="text-sm font-medium">Add Timestamp</p>
-                                        </button>
+                                        </button> : ""}
+
                                     </div>
                                 </div>
 
