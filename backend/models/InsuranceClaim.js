@@ -80,7 +80,7 @@ const insuranceClaimSchema = new mongoose.Schema({
     travelTime: Number,
     travelCost: Number,
     sharedFee: Number,
-    timeline: timelineSchema
+    timeline: [timelineSchema]
 }, { timestamps: true });
 
 export default mongoose.model("InsuranceClaim", insuranceClaimSchema);

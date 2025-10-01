@@ -175,4 +175,24 @@ router.put("/:id", protectRoute, async (req, res) => {
   }
 });
 
+// Add timestamp to a claim (protected)
+router.post("/:id/timeline", protectRoute, async (req, res) => {
+  try {
+    const { description, hours } = req.body;
+
+    const claim = await InsuranceClaim.findById(req.params.id);
+    if (!claim) return res.status(404).json({ message: "Claim not found" });
+
+    const newTimestamp = { description, hours };
+
+    claim.timeline.push(newTimestamp);
+    await claim.save();
+
+    res.status(201).json(newTimestamp);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
 export default router;

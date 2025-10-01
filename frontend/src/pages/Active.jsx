@@ -25,23 +25,23 @@ export default function Active() {
   const [openView, setOpenView] = useState(false)
   const [selectedClaim, setSelectedClaim] = useState(null);
 
-  useEffect(() => {
-    const fetchClaims = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/claims/active", {
-          withCredentials: true,
-        });
-        setClaims(res.data);
-        console.log(res.data);
-      } catch (err) {
-        setError(
-          "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchClaims = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/claims/active", {
+        withCredentials: true,
+      });
+      setClaims(res.data);
+      console.log(res.data);
+    } catch (err) {
+      setError(
+        "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchClaims();
   }, []);
 
@@ -292,7 +292,7 @@ export default function Active() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium dark:text-white">$12345678</p>
+                      <p className="text-sm font-medium dark:text-white">$0</p>
                       <p className="text-sm text-gray-500">Amount Made</p>
                     </div>
                   </div>
@@ -327,7 +327,7 @@ export default function Active() {
       )
       }
       {/*Mounting Model*/}
-      {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} />)}
+      {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} onAdded={fetchClaims} />)}
     </div >
   );
 }

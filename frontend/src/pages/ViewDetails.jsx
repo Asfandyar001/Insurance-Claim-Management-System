@@ -1,12 +1,30 @@
 import { useState } from "react";
+import AddTimestamps from "./AddTimestamps";
 
-export default function ViewDetails({ open, onClose, claimInfo }) {
+export default function ViewDetails({ open, onClose, claimInfo, onAdded }) {
     const [activeTab, setActiveTab] = useState("Summary");
+    const [add, setAdd] = useState(false);
+    const [addID, setAddID] = useState();
+    const [edit, setEdit] = useState(false);
 
     if (!claimInfo) return null;
 
-    const tabs = ["Summary", "Parties", "Timeline", "Invoicing", "TimeStamps"];
+    const tabs = ["Summary", "Parties", "Timeline", "Invoicing", "Timestamps"];
     const currency = "$"
+
+    const handleAdd = (id) => {
+        setAdd(true)
+        setAddID(id)
+    }
+
+    const handleEdit = (item, index) => {
+        setEdit(true)
+        console.log("Edit Button Pressed");
+    };
+
+    const handleDelete = (index) => {
+        console.log("Delete Button Pressed")
+    }
 
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
@@ -80,6 +98,10 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                                             <p className="text-zinc-500 dark:text-slate-400">Date Received:</p>
                                             <p className="dark:text-white">{claimInfo.dateReceived && claimInfo.dateReceived !== "" ? claimInfo.dateReceived.split("T")[0] : "Not Specified"} </p>
                                         </div>
+                                        <div className="flex flex-col justify-center items-start text-sm font-medium">
+                                            <p className="text-zinc-500 dark:text-slate-400">Crime Report Number:</p>
+                                            <p className="dark:text-white">{claimInfo.crimeReportNumber && claimInfo.crimeReportNumber !== "" ? claimInfo.crimeReportNumber : "Not Specified"} </p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -94,7 +116,7 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                                     </div>
 
                                     {/* Basic Insured Details in Grid */}
-                                    <div className="grid grid-cols-1 mt-5 gap-4">
+                                    <div className="grid grid-cols-1 mt-5 gap-3.5">
                                         <div className="flex flex-col justify-center items-start text-sm font-medium">
                                             <p className="text-zinc-500 dark:text-slate-400">Name:</p>
                                             <p className="dark:text-white">{claimInfo.insured.name}</p>
@@ -114,6 +136,16 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                                             </svg>
                                             <p className="dark:text-white">{claimInfo.insured.email && claimInfo.insured.email !== "" ? claimInfo.insured.email : "Not Specified"} </p>
+                                        </div>
+                                        <div className="grid grid-cols-2">
+                                            <div className="flex flex-row justify-start items-center text-sm gap-2">
+                                                <p className="text-zinc-500 dark:text-slate-400">ABN:</p>
+                                                <p className="dark:text-white">{claimInfo.abn && claimInfo.abn !== "" ? claimInfo.abn : "Not Specified"} </p>
+                                            </div>
+                                            <div className="flex flex-row justify-start items-center text-sm gap-2">
+                                                <p className="text-zinc-500 dark:text-slate-400">ITCE:</p>
+                                                <p className="dark:text-white">{claimInfo.itce && claimInfo.itce !== "" ? claimInfo.itce : "Not Specified"} </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -222,7 +254,7 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                             <div className="border rounded-xl border-gray-500/30 p-4 col-span-2 h-full overflow-y-auto">
                                 {/* Headings */}
                                 <div className="flex flex-col justify-center items-start gap-1">
-                                    <h1 className="text-2xl font-medium">Compliance & Timeline</h1>
+                                    <h1 className="text-2xl font-medium dark:text-white">Compliance & Timeline</h1>
                                     <p className="text-sm text-gray-500">Important dates and compliance milestones</p>
                                 </div>
 
@@ -346,12 +378,80 @@ export default function ViewDetails({ open, onClose, claimInfo }) {
                                 </div>
                             </div>
                         )}
-                        {activeTab === "TimeStamps" && (
-                            <p className="dark:text-white">⏱️ Timestamps and logs will appear here.</p>
+                        {activeTab === "Timestamps" && (
+                            <div className="border rounded-xl border-gray-500/30 p-4 col-span-2 h-full overflow-y-auto">
+                                {/* Heading + Hours + Button */}
+                                <div className="flex flex-row justify-between items-center">
+                                    {/* Heading */}
+                                    <div className="flex flex-row justify-start items-center dark:text-white text-2xl font-medium gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                        <h1>Activity Timeline</h1>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 items-center gap-0">
+                                        {/* Hours */}
+                                        <p className="text-sm font-medium dark:text-white">Total: {claimInfo.timeline?.reduce((acc, item) => acc + (item.hours || 0), 0)} hours</p>
+
+                                        {/* Button */}
+                                        <button onClick={() => handleAdd(claimInfo._id)} className="bg-black text-white rounded-md flex flex-row py-2 px-3 justify-center items-center gap-4 dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-gray-300 cursor-pointer">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                            </svg>
+                                            <p className="text-sm font-medium">Add Timestamp</p>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Timeline List */}
+                                <div className="mt-4 flex flex-col gap-3">
+                                    {claimInfo.timeline && claimInfo.timeline.length > 0 ? (
+                                        claimInfo.timeline.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex flex-row justify-between items-center border border-l-5 dark:border-l-white border-l-black border-gray-300 dark:border-gray-700 rounded-xl px-5 py-5"
+                                            >
+                                                {/* Details */}
+                                                <div className="flex flex-col justify-center items-start gap-2">
+                                                    <p className="px-3 py-1 rounded-4xl text-xs w-fit dark:text-white dark:bg-slate-800 bg-gray-100 font-medium">{item.hours} hours</p>
+                                                    <p className="text-sm font-semibold dark:text-white">{item.description || "No Description"}</p>
+                                                </div>
+
+                                                {/* Actions */}
+                                                <div className="grid grid-cols-2 gap-1">
+                                                    <button
+                                                        onClick={() => handleEdit(item, index)}
+                                                        className="hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer dark:text-white"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4.5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                                        </svg>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(index)}
+                                                        className="text-red-500 hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4.5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                        </svg>
+
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-sm m-auto text-gray-500 mt-2">No timeline entries</p>
+                                    )}
+                                </div>
+
+                            </div>
                         )}
                     </div>
                 </div>
             </div>
+            {/*Mounting Model*/}
+            {add && (<AddTimestamps open={add} onClose={() => setAdd(false)} id={addID} onAdd={onAdded} />)}
         </div>
     );
 }
