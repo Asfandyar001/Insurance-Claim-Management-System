@@ -194,5 +194,49 @@ router.post("/:id/timeline", protectRoute, async (req, res) => {
   }
 });
 
+// Update a timestamp inside claim.timeline (protected)
+router.put("/:id/timeline/:timestampId", protectRoute, async (req, res) => {
+  try {
+    const { id, timestampId } = req.params;
+    const { description, hours } = req.body;
+
+    const claim = await InsuranceClaim.findById(id);
+    if (!claim) return res.status(404).json({ message: "Claim not found" });
+
+    // Find the timestamp inside the claim
+    const timestamp = claim.timeline.id(timestampId);
+    if (!timestamp) return res.status(404).json({ message: "Timestamp not found" });
+
+    // Update fields
+    if (description !== undefined) timestamp.description = description;
+    if (hours !== undefined) timestamp.hours = hours;
+
+    await claim.save();
+    res.json(timestamp);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete timestamp by index
+router.delete("/:id/timeline/:index", protectRoute, async (req, res) => {
+  try {
+    const { id, index } = req.params;
+
+    const claim = await InsuranceClaim.findById(id);
+    if (!claim) return res.status(404).json({ message: "Claim not found" });
+
+    if (index < 0 || index >= claim.timeline.length) {
+      return res.status(404).json({ message: "Timestamp not found" });
+    }
+
+    claim.timeline.splice(index, 1);
+    await claim.save();
+
+    res.json({ message: "Timestamp deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 export default router;

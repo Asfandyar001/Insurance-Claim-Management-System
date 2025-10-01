@@ -1,11 +1,15 @@
 import { useState } from "react";
 import AddTimestamps from "./AddTimestamps";
+import { useToast } from "../hooks/use-toast";
+import axios from 'axios'
 
-export default function ViewDetails({ open, onClose, claimInfo, onAdded, status }) {
+export default function ViewDetails({ open, onClose, claimInfo, refresh, status }) {
     const [activeTab, setActiveTab] = useState("Summary");
     const [add, setAdd] = useState(false);
     const [addID, setAddID] = useState();
     const [edit, setEdit] = useState(false);
+    const [editItem, setEditItem] = useState(null);
+    const { toast } = useToast();
 
     if (!claimInfo) return null;
 
@@ -17,14 +21,26 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded, status 
         setAddID(id)
     }
 
-    const handleEdit = (item, index) => {
-        setEdit(true)
-        console.log("Edit Button Pressed");
+    const handleEdit = (item, index, claimID) => {
+        setAddID(claimID)
+        setEditItem({ ...item, index });
+        setEdit(true);
     };
 
-    const handleDelete = (index) => {
-        console.log("Delete Button Pressed")
-    }
+
+    const handleDelete = async (claimId, index) => {
+        if (!window.confirm("Are you sure you want to delete this timestamp?")) return;
+
+        try {
+            await axios.delete(`http://localhost:5000/api/claims/${claimId}/timeline/${index}`, { withCredentials: true });
+
+            toast({ title: "Timestamp deleted!", variant: "success" });
+
+            if (refresh) refresh(); // reload claim data
+        } catch (err) {
+            toast({ title: "Failed to delete timestamp", variant: "destructive" });
+        }
+    };
 
     return (
         <div className={`fixed inset-0 z-50 flex justify-center items-center transition-colors duration-200 ${open ? "visible bg-black/50" : "invisible"}`}>
@@ -431,7 +447,7 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded, status 
                                                 {/* Actions */}
                                                 <div className="grid grid-cols-2 gap-1">
                                                     <button
-                                                        onClick={() => handleEdit(item, index)}
+                                                        onClick={() => handleEdit(item, index, claimInfo._id)}
                                                         className="hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer dark:text-white"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4.5">
@@ -439,7 +455,7 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded, status 
                                                         </svg>
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(index)}
+                                                        onClick={() => handleDelete(claimInfo._id, index)}
                                                         className="text-red-500 hover:bg-gray-100 dark:hover:bg-slate-800 p-2 rounded-md cursor-pointer"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4.5">
@@ -461,7 +477,8 @@ export default function ViewDetails({ open, onClose, claimInfo, onAdded, status 
                 </div>
             </div>
             {/*Mounting Model*/}
-            {add && (<AddTimestamps open={add} onClose={() => setAdd(false)} id={addID} onAdd={onAdded} />)}
+            {add && (<AddTimestamps open={add} onClose={() => setAdd(false)} id={addID} onAdd={refresh} />)}
+            {editItem && (<AddTimestamps open={!!editItem} onClose={() => setEditItem(null)} id={addID} onAdd={refresh} editData={editItem} />)}
         </div>
     );
 }
