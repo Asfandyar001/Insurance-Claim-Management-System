@@ -63,7 +63,7 @@ export default function Sidebar({ setOpenAddClaim }) {
       <div className={`py-3.5 ${collapsed ? 'justify-center' : 'justify-between'} flex items-center border-b-2 border-gray-200 dark:border-gray-800`}>
         {!collapsed && (
           <div className="flex flex-col ml-4">
-            <h2 className="text-lg font-bold dark:text-white">LEADS</h2>
+            <h2 className="text-lg font-bold dark:text-white">LEAD</h2>
             <p className="text-xs text-gray-500">Management System</p>
           </div>
         )}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CustomSelect from "../components/CustomeSelect";
 import IconMenu from "../components/IconMenu";
 import axios from 'axios';
-
+import ViewDetails from "./ViewDetails.jsx"
 
 export default function Active() {
   const filter1 = ["Due Next", "Date of Loss", "Amount Made"];
@@ -22,25 +22,33 @@ export default function Active() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [openView, setOpenView] = useState(false)
+  const [selectedClaim, setSelectedClaim] = useState(null);
+
+  const fetchClaims = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/claims/active", {
+        withCredentials: true,
+      });
+      setClaims(res.data);
+      console.log(res.data);
+    } catch (err) {
+      setError(
+        "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchClaims = async () => {
-      try {
-        const res = await axios.get("/api/claims/active");
-        setClaims(res.data);
-        console.log(res.data)
-      } catch (err) {
-        setError(
-          "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchClaims();
   }, []);
 
+  const handleViewButton = (claim) => {
+    setOpenView(true);
+    setSelectedClaim(claim);
+  }
   const handleEditClaim = (claim) => {
     console.log("Edit Claim Clicked ", claim.claimNo)
   }
@@ -103,7 +111,11 @@ export default function Active() {
   if (loading || error) {
     return (
       <div className="flex items-center justify-center mt-50">
-        {loading && <p className="text-gray-600 dark:text-gray-300">Loading claims...</p>}
+        {loading && (<div className="flex items-center space-x-2">
+          {/* Spinner */}
+          <div className="w-5 h-5 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+          <p className="text-gray-600 dark:text-gray-300">Loading claims...</p>
+        </div>)}
         {error && <p className="text-red-500">{error}</p>}
       </div>
     );
@@ -264,7 +276,11 @@ export default function Active() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5" />
                     </svg>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium dark:text-white">{claim.dateOfLoss?.split("T")[0]}</p>
+                      <p className="text-sm font-medium dark:text-white">
+                        {claim.dateOfLoss && claim.dateOfLoss !== ""
+                          ? claim.dateOfLoss.split("T")[0]
+                          : "Not Specified"}
+                      </p>
                       <p className="text-sm text-gray-500">Loss Date</p>
                     </div>
                   </div>
@@ -276,7 +292,7 @@ export default function Active() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium dark:text-white">$12345678</p>
+                      <p className="text-sm font-medium dark:text-white">$0</p>
                       <p className="text-sm text-gray-500">Amount Made</p>
                     </div>
                   </div>
@@ -286,11 +302,11 @@ export default function Active() {
 
                 <div className="flex flex-row items-center justify-between">
 
-                  <p className="text-sm text-gray-500">Received: {claim.dateReceived?.split("T")[0]}</p>
+                  <p className="text-sm text-gray-500">Received: {claim.dateReceived && claim.dateReceived !== "" ? claim.dateReceived.split("T")[0] : "Not Specified"} </p>
 
                   <div className="flex flex-row justify-center items-center gap-2">
 
-                    <div className="flex flex-row justify-center items-center border border-gray-300 rounded-md px-4 py-1 gap-2 hover:bg-gray-200 cursor-pointer dark:border-gray-800 dark:hover:bg-slate-900">
+                    <div onClick={() => handleViewButton(claim)} className="flex flex-row justify-center items-center border border-gray-300 rounded-md px-4 py-1 gap-2 hover:bg-gray-200 cursor-pointer dark:border-gray-800 dark:hover:bg-slate-900">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4.5 dark:text-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -310,6 +326,8 @@ export default function Active() {
         </ul>
       )
       }
+      {/*Mounting Model*/}
+      {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} onAdded={fetchClaims} />)}
     </div >
   );
 }

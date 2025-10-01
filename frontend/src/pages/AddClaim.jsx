@@ -190,15 +190,21 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 title: "Fill out all required fields.",
                 variant: "destructive",
             });
+            setIsSaving(false);
             return;
         }
+
         try {
             const payload = {
                 ...formData,
-                daysOpen: 0
+                daysOpen: 0,
             };
 
-            const response = await axios.post("http://localhost:5000/api/claims", payload);
+            const response = await axios.post(
+                "http://localhost:5000/api/claims",
+                payload,
+                { withCredentials: true }
+            );
 
             toast({
                 title: "Claim Added Successfully",
@@ -208,7 +214,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
             onSubmit({
                 ...formData,
                 id: Date.now().toString(),
-                daysOpen: 0
+                daysOpen: 0,
             });
 
             onClose();
@@ -217,6 +223,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 title: "Failed to create a claim",
                 variant: "destructive",
             });
+        } finally {
             setIsSaving(false);
         }
     };
@@ -511,7 +518,7 @@ export default function AddClaim({ open, onClose, onSubmit }) {
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-11/12 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
+                className={`relative bg-white rounded-xl shadow p-6 w-4xl h-160 transition-all duration-200 dark:bg-slate-950 dark:border dark:border-gray-600 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"
                     }`}
             >
                 <button
@@ -555,11 +562,11 @@ export default function AddClaim({ open, onClose, onSubmit }) {
                 </div>
 
                 {/* Footer */}
-                <button onClick={handlePrevious} disabled={currentStep === 1} className={`absolute bottom-4 left-7 rounded-md py-2 px-5 flex items-center gap-2 ${currentStep === 1? "bg-gray-100 border border-gray-300 text-gray-400 cursor-not-allowed dark:border-zinc-700 dark:bg-slate-900" : "bg-white border border-gray-400/30 hover:bg-gray-200 cursor-pointer dark:bg-slate-950 dark:hover:bg-gray-900 dark:text-white"}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`size-4 ${currentStep === 1? "dark:text-zinc-600" : "dark:text-white" }`}>
+                <button onClick={handlePrevious} disabled={currentStep === 1} className={`absolute bottom-4 left-7 rounded-md py-2 px-5 flex items-center gap-2 ${currentStep === 1 ? "bg-gray-100 border border-gray-300 text-gray-400 cursor-not-allowed dark:border-zinc-700 dark:bg-slate-900" : "bg-white border border-gray-400/30 hover:bg-gray-200 cursor-pointer dark:bg-slate-950 dark:hover:bg-gray-900 dark:text-white"}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`size-4 ${currentStep === 1 ? "dark:text-zinc-600" : "dark:text-white"}`}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
-                    <p className={`${currentStep === 1? "dark:text-zinc-600" : "dark:text-white" }`}>Previous</p>
+                    <p className={`${currentStep === 1 ? "dark:text-zinc-600" : "dark:text-white"}`}>Previous</p>
                 </button>
 
                 {currentStep === FORM_STEPS.length ? (

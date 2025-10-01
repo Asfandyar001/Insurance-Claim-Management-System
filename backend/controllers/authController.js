@@ -9,12 +9,6 @@ import { validationResult } from "express-validator";
 const login = async (req, res) => {
   const { username, password } = req.body;
 
-  // Input validation
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     // Check if admin exists
     const admin = await Admin.findOne({ username });
@@ -33,12 +27,21 @@ const login = async (req, res) => {
       expiresIn: "1h",
     });
 
+    // ✅ Set token in httpOnly cookie instead of sending in JSON
+    res.cookie("jwt", token, {
+      httpOnly: true,                      // ❌ not accessible by JS
+      secure: process.env.NODE_ENV === "production", // ✅ only over HTTPS in production
+      sameSite: "strict",                  // prevents CSRF
+      maxAge: 60 * 60 * 1000,              // 1 hour
+    });
+
     res.status(200).json({
       _id: admin._id,
       username: admin.username,
-      token,
+      message: "Login successful",
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -56,4 +59,46 @@ const checkAuth = async (req, res) => {
   }
 };
 
-export { login, checkAuth };
+// @desc    Update admin password
+// @route   PUT /api/auth/update-password
+// @access  Private
+const updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const admin = await Admin.findById(req.admin.id); // req.admin comes from protectRoute middleware
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Check current password
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    // Update password
+    admin.password = newPassword; // pre-save hook will hash it
+    await admin.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// @desc    Logout Admin
+// @route   POST /api/auth/logout
+// @access  Public
+const logout = (req, res) => {
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+export { login, checkAuth, updatePassword, logout };

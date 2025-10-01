@@ -1,10 +1,11 @@
 import express from "express";
 import InsuranceClaim from "../models/InsuranceClaim.js";
+import { protectRoute } from "../middleware/authmiddleware.js";
 
 const router = express.Router();
 
-// Create Claim
-router.post("/", async (req, res) => {
+// Create Claim (protected)
+router.post("/", protectRoute, async (req, res) => {
   try {
     const {
       lcmRef,
@@ -12,6 +13,18 @@ router.post("/", async (req, res) => {
       lossType,
       assessmentType,
       status,
+      insuredName,
+      insuredAddress,
+      insuredPhone,
+      insuredEmail,
+      brokerName,
+      brokerPhone,
+      brokerEmail,
+      brokerAddress,
+      insurerName,
+      insurerPhone,
+      insurerEmail,
+      insurerAddress,
       dateOfLoss,
       dateReceived,
       reserveAmount,
@@ -22,24 +35,12 @@ router.post("/", async (req, res) => {
       firstReportSentDate,
       insurerUpdateDate,
       currentPHContactDate,
-      insuredName,
-      insuredAddress,
-      insuredPhone,
-      insuredEmail,
       abn,
       itce,
       policyType,
       policyNo,
       inceptionDate,
       dueDate,
-      brokerName,
-      brokerPhone,
-      brokerEmail,
-      brokerAddress,
-      insurerName,
-      insurerPhone,
-      insurerEmail,
-      insurerAddress,
       hours,
       hoursRate,
       professionalFeesHrs,
@@ -71,19 +72,19 @@ router.post("/", async (req, res) => {
         name: insuredName,
         address: insuredAddress,
         phone: insuredPhone,
-        email: insuredEmail
+        email: insuredEmail,
       },
       broker: {
         name: brokerName,
         address: brokerAddress,
         phone: brokerPhone,
-        email: brokerEmail
+        email: brokerEmail,
       },
       insurer: {
         name: insurerName,
         address: insurerAddress,
         phone: insurerPhone,
-        email: insurerEmail
+        email: insurerEmail,
       },
       dateOfLoss,
       dateReceived,
@@ -119,7 +120,7 @@ router.post("/", async (req, res) => {
       travelTime,
       travelCost,
       sharedFee,
-      description
+      description,
     });
 
     await claim.save();
@@ -129,8 +130,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get Active Claims
-router.get("/active", async (req, res) => {
+// Get Active Claims (protected)
+router.get("/active", protectRoute, async (req, res) => {
   try {
     const claims = await InsuranceClaim.find({ status: "Active" });
     res.json(claims);
@@ -139,9 +140,8 @@ router.get("/active", async (req, res) => {
   }
 });
 
-
-// Get Closed Claims
-router.get("/closed", async (req, res) => {
+// Get Closed Claims (protected)
+router.get("/closed", protectRoute, async (req, res) => {
   try {
     const claims = await InsuranceClaim.find({ status: "Closed" });
     res.json(claims);
@@ -150,9 +150,8 @@ router.get("/closed", async (req, res) => {
   }
 });
 
-
-// Get Single Claim
-router.get("/:id", async (req, res) => {
+// Get Single Claim (protected)
+router.get("/:id", protectRoute, async (req, res) => {
   try {
     const claim = await InsuranceClaim.findById(req.params.id);
     if (!claim) return res.status(404).json({ message: "Claim not found" });
@@ -162,14 +161,38 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Update Claim
-router.put("/:id", async (req, res) => {
+// Update Claim (protected)
+router.put("/:id", protectRoute, async (req, res) => {
   try {
-    const claim = await InsuranceClaim.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const claim = await InsuranceClaim.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
     res.json(claim);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
+
+// Add timestamp to a claim (protected)
+router.post("/:id/timeline", protectRoute, async (req, res) => {
+  try {
+    const { description, hours } = req.body;
+
+    const claim = await InsuranceClaim.findById(req.params.id);
+    if (!claim) return res.status(404).json({ message: "Claim not found" });
+
+    const newTimestamp = { description, hours };
+
+    claim.timeline.push(newTimestamp);
+    await claim.save();
+
+    res.status(201).json(newTimestamp);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 
 export default router;
