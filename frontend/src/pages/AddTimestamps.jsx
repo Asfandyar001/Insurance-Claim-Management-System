@@ -1,43 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "../hooks/use-toast";
 import axios from "axios";
 
-export default function AddTimestamps({ open, onClose, id, onAdd }) {
+export default function AddTimestamps({ open, onClose, id, onAdd, editData }) {
     const [hours, setHours] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
-    const handleAdd = async () => {
+    // Pre-fill if editing
+    useEffect(() => {
+        if (editData) {
+            setHours(editData.hours?.toString() || "");
+            setDescription(editData.description || "");
+        } else {
+            setHours("");
+            setDescription("");
+        }
+    }, [editData, open]);
+
+    const handleSave = async () => {
         if (!hours) {
-            toast({
-                title: "Please enter time worked (hours)",
-                variant: "destructive",
-            });
+            toast({ title: "Please enter time worked (hours)", variant: "destructive" });
             return;
         }
 
         try {
             setLoading(true);
-
-            const res = await axios.post(
-                `http://localhost:5000/api/claims/${id}/timeline`,
-                { hours: parseFloat(hours), description },
-                { withCredentials: true } // ✅
-            );
-
-            toast({
-                title: "Timestamp Added!",
-                variant: "success",
-            });
+            if (editData) {
+                // ✅ PUT request (edit)
+                await axios.put(
+                    `http://localhost:5000/api/claims/${id}/timeline/${editData._id}`,
+                    { hours: parseFloat(hours), description },
+                    { withCredentials: true }
+                );
+                toast({ title: "Timestamp Updated!", variant: "success" });
+            } else {
+                // ✅ POST request (add)
+                await axios.post(
+                    `http://localhost:5000/api/claims/${id}/timeline`,
+                    { hours: parseFloat(hours), description },
+                    { withCredentials: true }
+                );
+                toast({ title: "Timestamp Added!", variant: "success" });
+            }
 
             onClose();
-            setHours("");
-            setDescription("");
             if (onAdd) onAdd();
         } catch (err) {
             toast({
-                title: "Failed to add Timestamp",
+                title: `Failed to ${editData ? "update" : "add"} timestamp`,
                 variant: "destructive",
             });
         } finally {
@@ -66,21 +78,7 @@ export default function AddTimestamps({ open, onClose, id, onAdd }) {
 
                 {/* Header */}
                 <div className="flex flex-row justify-start items-center gap-2 font-medium text-lg dark:text-white">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                    </svg>
-                    <h2>Add Timestamp</h2>
+                    <h2>{editData ? "Edit Timestamp" : "Add Timestamp"}</h2>
                 </div>
 
                 {/* Input Fields */}
@@ -123,17 +121,17 @@ export default function AddTimestamps({ open, onClose, id, onAdd }) {
                         Cancel
                     </button>
                     <button
-                        onClick={handleAdd}
+                        onClick={handleSave}
                         disabled={loading}
                         className="flex items-center justify-center gap-2 bg-black text-white rounded-md py-2 px-3 dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-gray-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? (
-                            <>
-                                Adding...
-                            </>
-                        ) : (
-                            "Add Timestamp"
-                        )}
+                        {loading
+                            ? editData
+                                ? "Updating..."
+                                : "Adding..."
+                            : editData
+                                ? "Update Timestamp"
+                                : "Add Timestamp"}
                     </button>
                 </div>
             </div>

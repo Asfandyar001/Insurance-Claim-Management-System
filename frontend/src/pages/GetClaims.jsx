@@ -39,7 +39,11 @@ export default function GetClaims({ type }) {
                 });
             }
             setClaims(res.data);
-            console.log(res.data);
+
+            if (selectedClaim) {
+                const updated = res.data.find(c => c._id === selectedClaim._id);
+                if (updated) setSelectedClaim(updated);
+            }
         } catch (err) {
             setError(
                 "We’re having trouble reaching the server. Check your internet connection or contact support if the issue continues."
@@ -342,7 +346,7 @@ export default function GetClaims({ type }) {
             )
             }
             {/*Mounting Model*/}
-            {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} onAdded={fetchClaims} status={type} />)}
+            {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} refresh={fetchClaims} status={type} />)}
         </div >
     );
 }
