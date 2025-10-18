@@ -3,9 +3,10 @@ import CustomSelect from "../components/CustomeSelect.jsx";
 import IconMenu from "../components/IconMenu.jsx";
 import axios from 'axios';
 import ViewDetails from "./ViewDetails.jsx"
+import EditClaims from "./EditClaims.jsx";
 
 export default function GetClaims({ type }) {
-    const filter1 = ["Due Next", "Date of Loss", "Amount Made"];
+    const filter1 = ["Due Next", "Date of Loss", "Hours Worked"];
     const icon1 = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 dark:text-white">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
     </svg>;
@@ -23,6 +24,7 @@ export default function GetClaims({ type }) {
     const [sortBy, setSortBy] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [openView, setOpenView] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
     const [selectedClaim, setSelectedClaim] = useState(null);
 
     const fetchClaims = async () => {
@@ -62,7 +64,8 @@ export default function GetClaims({ type }) {
         setSelectedClaim(claim);
     }
     const handleEditClaim = (claim) => {
-        console.log("Edit Claim Clicked ", claim.claimNo)
+        setOpenEdit(true);
+        setSelectedClaim(claim);
     }
     const handleGenerateReport = (claim) => {
         console.log("Generate Report Clicked ", claim.claimNo)
@@ -105,9 +108,9 @@ export default function GetClaims({ type }) {
                 aVal = new Date(a.dateOfLoss);
                 bVal = new Date(b.dateOfLoss);
                 break;
-            case "Amount Made":
-                aVal = a.amountMade || 0;
-                bVal = b.amountMade || 0;
+            case "Hours Worked":
+                aVal = a.timeline?.reduce((acc, item) => acc + (item.hours || 0), 0) || 0;
+                bVal = b.timeline?.reduce((acc, item) => acc + (item.hours || 0), 0) || 0;
                 break;
             default:
                 return 0;
@@ -304,15 +307,14 @@ export default function GetClaims({ type }) {
                                         </div>
                                     </div>
 
-                                    {/* Amount */}
+                                    {/* Hours Worked */}
                                     <div className="flex flex-row items-center gap-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            strokeWidth={2} stroke="currentColor" className="size-5 text-gray-500">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5 text-gray-500">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                         </svg>
                                         <div className="flex flex-col">
-                                            <p className="text-sm font-medium dark:text-white">$0</p>
-                                            <p className="text-sm text-gray-500">Amount Made</p>
+                                            <p className="text-sm font-medium dark:text-white">{claim.timeline?.reduce((acc, item) => acc + (item.hours || 0), 0)} hours</p>
+                                            <p className="text-sm text-gray-500">Worked</p>
                                         </div>
                                     </div>
                                 </div>
@@ -347,6 +349,7 @@ export default function GetClaims({ type }) {
             }
             {/*Mounting Model*/}
             {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} refresh={fetchClaims} status={type} />)}
+            {openEdit && (<EditClaims open={openEdit} onClose={() => setOpenEdit(false)} claimInfo={selectedClaim} refresh={fetchClaims} status={type} />)}
         </div >
     );
 }
