@@ -3,6 +3,7 @@ import CustomSelect from "../components/CustomeSelect.jsx";
 import IconMenu from "../components/IconMenu.jsx";
 import axios from 'axios';
 import ViewDetails from "./ViewDetails.jsx"
+import EditClaims from "./EditClaims.jsx";
 
 export default function GetClaims({ type }) {
     const filter1 = ["Due Next", "Date of Loss", "Amount Made"];
@@ -23,6 +24,7 @@ export default function GetClaims({ type }) {
     const [sortBy, setSortBy] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [openView, setOpenView] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
     const [selectedClaim, setSelectedClaim] = useState(null);
 
     const fetchClaims = async () => {
@@ -62,7 +64,8 @@ export default function GetClaims({ type }) {
         setSelectedClaim(claim);
     }
     const handleEditClaim = (claim) => {
-        console.log("Edit Claim Clicked ", claim.claimNo)
+        setOpenEdit(true);
+        setSelectedClaim(claim);
     }
     const handleGenerateReport = (claim) => {
         console.log("Generate Report Clicked ", claim.claimNo)
@@ -347,6 +350,7 @@ export default function GetClaims({ type }) {
             }
             {/*Mounting Model*/}
             {openView && (<ViewDetails open={openView} onClose={() => setOpenView(false)} claimInfo={selectedClaim} refresh={fetchClaims} status={type} />)}
+            {openEdit && (<EditClaims open={openEdit} onClose={() => setOpenEdit(false)} claimInfo={selectedClaim} refresh={fetchClaims} status={type} />)}
         </div >
     );
 }
